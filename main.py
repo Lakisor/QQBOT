@@ -8,9 +8,7 @@ import asyncio
 import re
 import time
 
-# /home/lokisor/BOT
-# C:\Users\Vitaliy\Desktop\BOT
-# /home/daniil/bot
+# bot is only for QQ server
 
 path_dir = r'/home/daniil/bot'
 bot = commands.Bot(command_prefix = "~")
@@ -24,101 +22,18 @@ bot_list = [
     727519290072498206
 ]
 
-#channels_list_ids = [ 756924711673397358, # ID серверов(желательно сверху вниз как на сервере)
-#                      758368327285342218,
-#                      758368345845530674 ]
-
-#@bot.event
-#async def on_voice_state_update(member, before, after):
-#    if after != None:
-#        channel_from = bot.get_channel(756924711232995444) # Комната с которой перекидывает
-#
-#        try:
-#
-#            if after.channel.id == 756924711232995444: # Комната с которой перекидывает
-#
-#                all_count = {}
-#
-#                for id in channels_list_ids:
-#                    count = 0
-#                    list_of_members = bot.get_channel(id).members
-#                    for i in list_of_members:
-#                        count += 1
-#
-#                    all_count[id] = count
-#
-#               tuples = list(all_count.items())
-#                tuples.sort(key=lambda i: i[1])
-#
-#                number = -1
-#                for i in tuples:
-#                    if tuples[number][-1] >= 3: # настройка лимитов (конкретно здесь убирают каналы с >№ участников)
-#                        number = number - 1
-#                        continue
-#                    elif tuples[number][-1] >= 1: # второй уровень проверки, если первый не проходит
-#                        channel = bot.get_channel(tuples[number][0])
-#                        await member.move_to(channel)
-#                    else:
-#                        channel = bot.get_channel(tuples[0][0]) # Все остальные случае (конкретно если комната пустая)
-#                        await member.move_to(channel)
-#
-#            await member.send('Ты перекинут в ' + str(channel.name))
-#
-#channels_list_ids = [ 756924711673397358, # ID серверов(желательно сверху вниз как на сервере)
-#                      758368327285342218,
-#                      758368345845530674 ]
-
-#@bot.event
-#async def on_voice_state_update(member, before, after):
-#    if after != None:
-#        channel_from = bot.get_channel(756924711232995444) # Комната с которой перекидывает
-#
-#        try:
-#
-#            if after.channel.id == 756924711232995444: # Комната с которой перекидывает
-#
-#                all_count = {}
-#
-#                for id in channels_list_ids:
-#                    count = 0
-#                    list_of_members = bot.get_channel(id).members
-#                    for i in list_of_members:
-#                        count += 1
-#
-#                    all_count[id] = count
-#
-#               tuples = list(all_count.items())
-#                tuples.sort(key=lambda i: i[1])
-#
-#                number = -1
-#                for i in tuples:
-#                    if tuples[number][-1] >= 3: # настройка лимитов (конкретно здесь убирают каналы с >№ участников)
-#                        number = number - 1
-#                        continue
-#                    elif tuples[number][-1] >= 1: # второй уровень проверки, если первый не проходит
-#                        channel = bot.get_channel(tuples[number][0])
-#                        await member.move_to(channel)
-#                    else:
-#                        channel = bot.get_channel(tuples[0][0]) # Все остальные случае (конкретно если комната пустая)
-#                        await member.move_to(channel)
-#
-#            await member.send('Ты перекинут в ' + str(channel.name))
-#
-#        except AttributeError:
-#            pass
-
 @bot.event
 async def on_raw_reaction_add(ctx):
     message_id = ctx.message_id
-    if message_id == 733759588406657105:  # id  сообщения для комментирования
+    if message_id == 733759588406657105:
         guild_id = ctx.guild_id
-        guild = discord.utils.find(lambda g: g.id == guild_id, bot.guilds)  # хз как обьяснить что это, но оно надо
+        guild = discord.utils.find(lambda g: g.id == guild_id, bot.guilds)
         if ctx.emoji.name == "✅":  # смайл
             role = discord.utils.get(guild.roles, name='User')
             member = discord.utils.find(lambda m: m.id == ctx.user_id,
-                                        guild.members)  # хз как обьяснить что это, но оно надо
-            if member:  # проверка на существование юзера
-                await member.add_roles(role)  # добавление роли ботом
+                                        guild.members)
+            if member:
+                await member.add_roles(role)
             else:
                 print('Такого челика нет')
         else:
@@ -174,28 +89,28 @@ async def add_lvl(ctx, users, user):
                 if matched != None:
                     await ctx.author.add_roles(role)
 
-async def lvl(ctx, users): #+
+async def lvl(ctx, users):
     user = str(ctx.author.id)
     await ctx.channel.send(f'{ctx.author.mention}, у тебя {int(users[user]["lvl"])} LVL!')
 
 
-async def roll(ctx): #+
+async def roll(ctx):
     roll = str(random.randint(1, 100))
     await ctx.channel.send("[1-100]: " + roll)
 
 
-async def ping(ctx): #+
+async def ping(ctx): 
     await ctx.channel.send('pong')
 
 
-async def add_exp(ctx, users, user, exp): #+
+async def add_exp(ctx, users, user, exp): 
     if ctx.author.id == 727519290072498206:
         return
     else:
         users[user]['exp'] += exp
 
 
-async def update_data(users, user): #+
+async def update_data(users, user):
     if not user in users:
         users[user] = {}
         users[user]['exp'] = 0
@@ -273,7 +188,7 @@ async def on_message(ctx):
     with open(path_dir + '/users.json', 'r') as f:  # lvl system
         users = json.load(f)
     if ctx.author.id in bot_list:
-        print('ПИЗДЕЦ')
+        pass
     else:
         await update_data(users, str(ctx.author.id))
         await add_lvl(ctx, users, str(ctx.author.id))
@@ -318,7 +233,7 @@ async def on_message(ctx):
     await bot.process_commands(ctx) # что бы работал @bot.command
 
 
-# Счёт участников
+# users counting
 @bot.event
 async def on_member_join(member: discord.Member):
     CountChannel = bot.get_channel(727656124911714316)
@@ -331,7 +246,7 @@ async def on_member_remove(member: discord.Member):
     await CountChannel.edit(name="Участников: {}".format(len(member.guild.members)))
 
 
-# Статус у бота
+# bot status
 @bot.event
 async def on_ready():
     print('Bot is ready!')
