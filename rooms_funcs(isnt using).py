@@ -4,10 +4,10 @@ from config import settings
 import asyncio
 import os
 
-bot = commands.Bot(command_prefix = "ЗДЕСЬ") # префикс
-os.chdir(r'ЗДЕСЬ') # директория с ботом
+bot = commands.Bot(command_prefix = "HERE") # prefix
+os.chdir(r'HERE') # dir with bot
 
-channels_list_ids = [ 754836145103175841, # ID серверов(желательно сверху вниз как на сервере)
+channels_list_ids = [ 754836145103175841, # ID of all using channels
                       754836180989902879,
                       754836202066149416,
                       754836202066149416,
@@ -26,7 +26,7 @@ async def on_voice_state_update(member, before, after):
     if after != None:
         try:
 
-            if after.channel.id == 756924711232995444: # Комната с которой перекидывает
+            if after.channel.id == 756924711232995444: # id main channel
 
                 all_count = {}
 
@@ -42,15 +42,16 @@ async def on_voice_state_update(member, before, after):
                 tuples.sort(key=lambda i: i[1])
 
                 number = -1
+                n = 10 # setting limit of user in one channel(10)
                 for i in tuples:
-                    if tuples[number][-1] >= 10: # настройка лимитов (конкретно здесь убирают каналы с >№ участников)
+                    if tuples[number][-1] >= n: 
                         number = number - 1
                         continue
-                    elif tuples[number][-1] >= 5: # второй уровень проверки, если первый не проходит
+                    elif tuples[number][-1] >= n/2:
                         channel = bot.get_channel(tuples[number][0])
                         await member.move_to(channel)
                     else:
-                        channel = bot.get_channel(tuples[0][0]) # Все остальные случае (конкретно если комната пустая)
+                        channel = bot.get_channel(tuples[0][0]) #
                         await member.move_to(channel)
 
             await member.send('Ты перекинут в ' + str(channel.name))
